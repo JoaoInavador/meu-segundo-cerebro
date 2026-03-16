@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import gspread
-import json
 
 # ==========================================
 # 1. CONEXÃO COM O GOOGLE SHEETS (VIA NUVEM)
@@ -10,15 +9,15 @@ import json
 st.set_page_config(page_title="O Meu Segundo Cérebro", layout="wide", page_icon="🧠")
 
 try:
-    # O código agora vai buscar a chave ao cofre seguro do Streamlit Cloud
-    credenciais_dict = json.loads(st.secrets["google_json"])
+    # O código agora puxa a chave no formato blindado do Streamlit (TOML)!
+    credenciais_dict = dict(st.secrets["google_credentials"])
     gc = gspread.service_account_from_dict(credenciais_dict)
     
     # Abre a planilha pelo nome exato e seleciona a primeira aba
     planilha = gc.open("Base_Segundo_Cerebro").sheet1
 except Exception as e:
     st.error(f"⚠️ Erro de Conexão com a Nuvem: {e}")
-    st.info("Nota: Lembre-se de configurar a variável 'google_json' nas configurações avançadas (Secrets) do Streamlit Cloud.")
+    st.info("Verifique se o texto no 'Secrets' do Streamlit Cloud está no formato [google_credentials] e se guardou as alterações.")
     st.stop()
 
 # ==========================================
